@@ -1,0 +1,84 @@
+create table solar_panel(PV_no varchar(20) primary key,pv_type varchar(10),cap int(10),charge int);
+create table user( B_no varchar(10) primary key,u_name varchar(20),u_add varchar(20));
+create table vendor(tin_no varchar(10) primary key,v_name varchar(20),v_add varchar(20));
+create table sells(PV_no varchar(20),tin_no varchar(10),primary key(PV_no,tin_no),foreign key(pv_no) references solar_panel(PV_no),foreign key(tin_no) references vendor(tin_no) ,quantity int(20));
+create table purchased_by(pv_no varchar(20),B_no varchar(10),primary key(PV_no,B_no),foreign key(PV_no) references solar_panel(PV_no),foreign key(B_no) references user(B_no));
+create table installs(tin_no varchar(20),PV_no varchar(20),B_no varchar(20),primary key(tin_no,PV_no,B_no),foreign key(tin_no) references vendor(tin_no),foreign key(PV_no) references solar_panel(PV_no),foreign key(B_no) references user(B_no),Idate date,charge int,Itype varchar(20));
+
+
+insert into solar_panel values("P01","mono",25,25000);
+insert into solar_panel values("P02","poly",10,28000);
+insert into solar_panel values("P03","mono",18,10000);
+insert into solar_panel values("P04","mono",20,15000);
+insert into solar_panel values("P05","poly",16,15000);
+
+insert into vendor values("t01","vishakh","bangalore");
+insert into vendor values("t02","amit","bangalore");
+insert into vendor values("t03","sushant","bangalore");
+insert into vendor values("t04","vijay","mangalore");
+insert into vendor values("t05","nikhil","mangalore");
+
+
+insert into user values("b01","sneha","bangalore");
+insert into user values("b02","raji","mangalore");
+insert into user values("b03","gayatri","bengalore");
+insert into user values("b04","veena","sirsi");
+insert into user values("b05","ananya","bangalore");
+
+insert into sells values("t01","p01",5);
+insert into sells values("p01","t01",5);
+insert into sells values("p02","t01",2);
+insert into sells values("p04","t01",12);
+insert into sells values("p02","t02",4);
+insert into sells values("p02","t03",4);
+insert into sells values("p03","t04",3);
+
+
+insert into purchased_by values("p01","b01");
+insert into purchased_by values("p01","b01");
+insert into purchased_by values("p02","b01");
+insert into purchased_by values("p02","b02");
+insert into purchased_by values("p02","b03");
+insert into purchased_by values("p02","b05");
+insert into purchased_by values("p03","b02");
+insert into purchased_by values("p03","b05");
+insert into purchased_by values("p04","b05");
+
+
+insert into installs values("t01","p01","b01","2022-08-20",20000,"domestic");
+insert into installs values("t01","p02","b01","2022-07-19",24000,"domestic");
+insert into installs values("t02","p02","b02","2020-12-04",26000,"domestic");
+insert into installs values("t02","p02","b05","2020-12-27",20000,"commercial");
+insert into installs values("t02","p03","b01","2021-02-12",24000,"commercial");
+insert into installs values("t02","p03","b03","2022-12-24",23000,"commercial");
+
+
+2)select u.u_add from user u,installs i,solar_panel p where u.B_no=i.B_no and p.PV_no=i.PV_no and p.cap=(select max(cap) from solar_panel p);
+
+
+3)select u.u_add from user u,installs i,solar_panel p where u.B_no=i.B_no and p.PV_no=i.PV_no and p.pv_type='mono';
+
+
+5)select v.* from vendor v,installs i,solar_panel p where p.PV_no=i.PV_no and v.tin_no=i.tin_no and Idate=(select min(Idate) from installs i);
+
+
+4)select u.u_add as address,sum(i.charge) as total from user u,installs i,solar_panel p where u.B_no=i.B_no and p.PV_no=i.PV_no and p.pv_type='poly' and exists(select u.u_add from user u,installs i,solar_panel p where u.B_no=i.B_no and p.pv_type='mono') group by u.u_add;
+
+
+6)select avg(i.charge) as average from user u, solar_panel p, installs i where i.pv_no=p.pv_no and i.Itype='commercial' group by i.charge having avg(i.charge);
+
+
+
+select e.fname,e.lname,d.dname from employee e join department d on e.dnumber=d.dnumber where e.salary>(select avg(e1.salary) from employee e1 join department d1 on e1.dnumber=d1.dnumber where d1.dname='Finance')and d.dname!='finance';
+
+
+select e.fname,e.lname,d.dname from employee e join department d on e.dnumber=d.dnumber join works_on w on w.empssn=e.ssn join project p on p.pnumber=w.pnumber where d.dname='R&D' and p.dnumber=d.dnumber group by e.fname,e.lname,d.dname having count(w.pnumber)>2;
+
+select p.pname from project p join department d on d.dnumber=p.pnumber where p.p_end>curdate();
+
+SELECT e.ssn, e.fname, e.lname, COUNT(DISTINCT w.empssn) AS num_employees FROM employee e JOIN employee s ON e.ssn = s.supssn JOIN works_on w ON s.ssn = w.empssn JOIN project p ON w.pnumber = p.pnumber WHERE p.p_start < CURDATE()  GROUP BY e.ssn, e.fname, e.lname HAVING COUNT(DISTINCT w.empssn) > 3;
+
+select d.empname from dependent d join employee e on d.empssn=e.ssn join works_on w on e.ssn=w.empssn join project p on p.pnumber=w.pnumber group by d.empname having sum(p.pworth)>=1000000;
+
+select d.dname,e.fname from employee e join department d on d.dnumber=e.dnumber join project p on p.dnumber=d.dnumber join plocation pl on p.pnumber=pl.pnumber group by d.dname,e.fname having count(distinct location)>1;
+
