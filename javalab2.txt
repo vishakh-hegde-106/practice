@@ -1,0 +1,126 @@
+College.java
+
+public class College {
+String Name, Address;
+public String getName() {
+return Name;
+}
+public void setName(String name) {
+Name = name;
+}
+public String getAddress() {
+return Address;
+}
+public void setAddress(String
+address) {
+
+Address = address;
+}
+}
+
+
+Department.java
+
+public class Department {
+String name, description;
+int id;
+College college;
+public Department(College college) {
+this.college = college;
+}
+public College getCollege() {
+return college;
+}
+public void setCollege(College college) {
+this.college = college;
+}
+public String getName() {
+return name;
+}
+public void setName(String name) {
+this.name = name;
+}
+public String getDescription() {
+return description;
+}
+public void setDescription(String
+description) {
+
+this.description = description;
+}
+public int getId() {
+return id;
+}
+public void setId(int id) {
+this.id = id;
+}
+}
+
+mainclass.java
+
+@SpringBootApplication
+public class DemoApplication {
+public static void main(String[] args) {
+Scanner sc = new Scanner(System.in);
+
+SpringApplication.run(DemoApplication.class, args);
+ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;testBean.xml&quot;);
+Department dt = (Department)ac.getBean(&quot;department&quot;);
+while(true) {
+System.out.println(&quot;1. insert the Department details\n &quot;
++ &quot;2. Display Department with College details \n&quot;
++ &quot;3. exit&quot;);
+System.out.println(&quot;enter the choice&quot;);
+int a = sc.nextInt();
+switch(a) {
+case 1:
+System.out.println(&quot;enter the Department name&quot;);
+
+dt.setName(sc.next());
+System.out.println(&quot;enter the Department no&quot;);
+dt.setId(sc.nextInt());
+System.out.println(&quot;enter the Department Decription&quot;);
+dt.setDescription(sc.next());
+System.out.println(&quot;thanks for input&quot;);
+break;
+
+case 2:
+System.out.println(&quot;Department Details:&quot;);
+System.out.println(&quot;Name:&quot;+dt.getName()+&quot; &quot;+&quot;
+ID:&quot;+dt.getId()+
+&quot; Department Description&quot;+dt.getDescription());
+System.out.println(&quot;College Details&quot;);
+College c = dt.getCollege();
+System.out.println(&quot;College Name: &quot;+c.getName());
+System.out.println(&quot;College Address: &quot;+c.getAddress());
+break;
+case 3:
+System.exit(0);
+}
+}
+}
+}
+
+
+TestBean.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- Define the college bean -->
+    <bean id="college" class="com.example.Institute.College" scope="singleton">
+        <property name="name" value="RV College of Engineering"/>
+        <property name="address" value="Mysuru Road, Bengaluru"/>
+    </bean>
+
+    <!-- Define the department bean -->
+    <bean id="department" class="com.example.Institute.Department" scope="prototype">
+        <constructor-arg name="college" ref="college"/>
+    </bean>
+
+</beans>
+
+	

@@ -1,0 +1,119 @@
+ demonsapplication.java
+
+package com.example.programmm2.demoss;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class DemossApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(DemossApplication.class, args);
+		AnnotationConfigApplicationContext ac= new AnnotationConfigApplicationContext(Myconfig.class);
+		Department d=ac.getBean(Department.class);
+		System.out.println(d.getClass());
+		College c=d.getCollege();
+		System.out.println(c.getName());
+		d.setName("MCA");
+		System.out.println(d.getName());
+		
+		
+	}
+
+}
+
+
+Myconfig.java
+package com.example.programmm2.demoss;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
+
+@Configuration
+public class Myconfig {
+	@Bean
+	@Scope("prototype")
+	public Department department(College college)
+	{
+		Department department = new Department(college);
+				{
+					return department;
+				}
+	}
+				
+				 @Bean
+				 @Scope("singleton")
+				 public College college()
+				 {
+					 College college= new College();
+					 college.setName("RVCE");
+					 college.setAddress("banglore");
+					 return college;
+				 }
+	
+
+}
+
+
+College.java
+
+public class College 
+{
+
+	 private String name;
+	    private String address;
+
+	    public String getName() {
+	        return name;
+	    }
+
+	    public void setName(String name) {
+	        this.name = name;
+	    }
+
+	    public String getAddress() {
+	        return address;
+	    }
+
+	    public void setAddress(String address) {
+	        this.address = address;
+	    }
+	
+}
+
+
+Department.java
+
+public class Department {
+  
+	String did,name;
+	College college;
+	
+	 public College getCollege() {
+		return college;
+	}
+	public void setCollege(College college) {
+		this.college = college;
+	}
+	public Department(College college)
+	 {
+		 this.college=college;
+		 }
+	public String getDid() {
+		return did;
+	}
+	public void setDid(String did) {
+		this.did = did;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	}
+	 
