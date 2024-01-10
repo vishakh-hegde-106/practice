@@ -1,0 +1,70 @@
+package com.example.classrestexamplejava.restexample1;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/Book")
+public class BookController {
+private final List<Book> books = new ArrayList<Book>();
+
+@GetMapping
+public List<Book> getAllBooks() {
+return books;
+}
+
+@PostMapping
+public List<Book> addBook(@RequestBody Book book) {
+books.add(book);
+return books;
+}
+}
+
+
+
+
+
+
+
+public class Book
+{
+private int id;
+public int getId() 
+{
+return id;
+}
+public void setId(int id) 
+{
+this.id = id;
+}
+public String getTitle() 
+{
+return title;
+}
+public void setTitle(String title) 
+{
+this.title = title;
+}
+public String getAuthor() {
+return author;
+}
+public void setAuthor(String author) {
+this.author = author;
+}
+public int getPublicationYear() 
+{
+return publicationYear;
+}
+public void setPublicationYear(int publicationYear) {
+this.publicationYear = publicationYear;
+}
+private String title;
+private String author;
+private int publicationYear;
+}
